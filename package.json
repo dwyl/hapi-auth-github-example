@@ -1,0 +1,27 @@
+{
+  "name": "hapi-auth-github-example",
+  "version": "1.0.0",
+  "description": "An example of using hapi-auth-github (GitHub OAuth2 Hapi Plugin)",
+  "main": "server.js",
+  "scripts": {
+    "test": "tape"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nelsonic/hapi-auth-github-example.git"
+  },
+  "keywords": [
+    "github",
+    "authentication",
+    "oauth2",
+    "example",
+    "simple",
+    "tested"
+  ],
+  "author": "nelsonic & co.",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/nelsonic/hapi-auth-github-example/issues"
+  },
+  "homepage": "https://github.com/nelsonic/hapi-auth-github-example#readme"
+}
