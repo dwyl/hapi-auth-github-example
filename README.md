@@ -1,2 +1,3 @@
-# hapi-auth-github-example
-an example of using github authentication
+# `hapi-auth-github` *example*
+
+An quick example of using github authentication.
