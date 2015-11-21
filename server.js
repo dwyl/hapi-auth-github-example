@@ -1,7 +1,6 @@
 require('env2')('.env');
-var querystring = require('querystring'); // nodejs.org/api/querystring.html
-var assert      = require('assert');
-var Hapi        = require('hapi');
+var assert = require('assert');
+var Hapi   = require('hapi');
 
 var server = new Hapi.Server();
 server.connection({
@@ -11,11 +10,11 @@ server.connection({
 
 var opts = {
   REDIRECT_URL: '/githubauth',  // must match google app redirect URI
-  handler: require('./github_oauth_handler.js'), // your handler
+  handler: require('./lib/github_oauth_handler.js'), // your handler
   SCOPE: 'user' // get user's profile see: developer.github.com/v3/oauth/#scopes
 };
 
-var hapi_auth_github = require('../lib');
+var hapi_auth_github = require('hapi-auth-github');
 
 server.register([{ register: hapi_auth_github, options:opts }], function (err) {
   // handle the error if the plugin failed to load:
