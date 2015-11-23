@@ -1,5 +1,6 @@
 var test = require('tape');
 var nock = require('nock');
+var JWT  = require('jsonwebtoken');
 var dir  = __dirname.split('/')[__dirname.split('/').length-1];
 var file = dir + __filename.replace(__dirname, '') + " > ";
 
@@ -30,8 +31,9 @@ test(file+'GET /githubauth?code=oauth2codehere', function(t) {
   });
 });
 
+var COOKIE; // we get this in the response in the next test:
 
-test(file+'MOCK GitHub OAuth2 Flow /githubauth?code=mockcode', function(t) {
+test.only (file+'MOCK GitHub OAuth2 Flow /githubauth?code=mockcode', function(t) {
   // google oauth2 token request url:
   var fs = require('fs');
   var token_fixture = fs.readFileSync('./test/fixtures/sample_access_token.json');
@@ -57,9 +59,11 @@ test(file+'MOCK GitHub OAuth2 Flow /githubauth?code=mockcode', function(t) {
     t.equal(response.statusCode, 200, "Profile retrieved (Mock)");
     var expected = 'Hello Alex, You Logged in Using GitHub!';
     t.equal(response.payload, expected, "Got: " + expected + " (as expected)");
-    // console.log(' - - - - - - - - - - - - - - - - - -');
-    // console.log(response.payload);
-    // console.log(' - - - - - - - - - - - - - - - - - -');
+    console.log(' - - - - - - - - - - - - - - - - - -');
+    COOKIE = response.headers['set-cookie'][0].split('=')[1];
+    console.log(COOKIE);
+    console.log(' - - - - - - - - - - - - - - - - - - decoded:');
+    console.log(JWT.decode(COOKIE));
     server.stop(t.end);
   });
 });
