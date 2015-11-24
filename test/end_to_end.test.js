@@ -1,8 +1,9 @@
+var dir  = __dirname.split('/')[__dirname.split('/').length-1];
+var file = dir + __filename.replace(__dirname, '') + " > ";
 var test = require('tape');
 var nock = require('nock');
 var JWT  = require('jsonwebtoken');
-var dir  = __dirname.split('/')[__dirname.split('/').length-1];
-var file = dir + __filename.replace(__dirname, '') + " > ";
+var redisClient = require('redis-connection')(); // instantiate redis-connection
 
 var server = require('../server.js');
 
@@ -33,7 +34,7 @@ test(file+'GET /githubauth?code=oauth2codehere', function(t) {
 
 var COOKIE; // we get this in the response in the next test:
 
-test.only (file+'MOCK GitHub OAuth2 Flow /githubauth?code=mockcode', function(t) {
+test(file+'MOCK GitHub OAuth2 Flow /githubauth?code=mockcode', function(t) {
   // google oauth2 token request url:
   var fs = require('fs');
   var token_fixture = fs.readFileSync('./test/fixtures/sample_access_token.json');
@@ -64,6 +65,10 @@ test.only (file+'MOCK GitHub OAuth2 Flow /githubauth?code=mockcode', function(t)
     console.log(COOKIE);
     console.log(' - - - - - - - - - - - - - - - - - - decoded:');
     console.log(JWT.decode(COOKIE));
-    server.stop(t.end);
+    server.stop(function(){
+      redisClient.end();   // ensure redis con closed! - \\
+      t.equal(redisClient.connected, false, "✓ Connection to Redis Closed");
+      t.end()
+    });
   });
 });
