@@ -1,6 +1,6 @@
 {
   "name": "hapi-auth-github-example",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An example of using hapi-auth-github (GitHub OAuth2 Hapi Plugin)",
   "main": "server.js",
   "scripts": {
@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "hapi-auth-github": "^1.0.5",
-    "redis-connection": "^4.0.1"
+    "redis-connection": "^4.0.1",
+    "wreck": "^7.0.0"
   }
 }

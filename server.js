@@ -1,7 +1,7 @@
 require('env2')('.env');
 var assert = require('assert');
 var Hapi   = require('hapi');
-
+var Wreck  = require('wreck');
 var server = new Hapi.Server();
 server.connection({
 	host: 'localhost',
@@ -49,6 +49,9 @@ server.route([{
   path: '/issues',
 	config: { auth: 'jwt' },
   handler: function(req, reply) {
+    console.log(' - - - - - - - - - - - - - - - - - - access_token:');
+    console.log(req.auth.credentials.tokens.access_token);
+    // wreck('https://api.github.com/')
     reply('boom');
   }
 }
