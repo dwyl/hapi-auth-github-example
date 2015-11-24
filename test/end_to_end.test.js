@@ -61,10 +61,23 @@ test(file+'MOCK GitHub OAuth2 Flow /githubauth?code=mockcode', function(t) {
     var expected = 'Hello Alex, You Logged in Using GitHub!';
     t.equal(response.payload, expected, "Got: " + expected + " (as expected)");
     console.log(' - - - - - - - - - - - - - - - - - -');
-    COOKIE = response.headers['set-cookie'][0].split('=')[1];
-    console.log(COOKIE);
-    console.log(' - - - - - - - - - - - - - - - - - - decoded:');
-    console.log(JWT.decode(COOKIE));
+    COOKIE = response.headers['set-cookie'][0]; //.split('=')[1];
+    console.log();
+    // console.log(' - - - - - - - - - - - - - - - - - - decoded:');
+    // console.log(JWT.decode(COOKIE));
+    server.stop(t.end);
+  });
+});
+
+test(file+'Visit /issues using JWT Cookie', function(t) {
+  var options = {
+    method: "GET",
+    url: "/issues",
+    headers: { cookie: COOKIE }
+  };
+  server.inject(options, function(response) {
+    t.equal(response.statusCode, 200, "Server is working.");
+    // setTimeout(function(){ server.stop(t.end); }, 100);
     server.stop(function(){
       redisClient.end();   // ensure redis con closed! - \\
       t.equal(redisClient.connected, false, "✓ Connection to Redis Closed");

@@ -49,11 +49,7 @@ server.route([{
   path: '/issues',
 	config: { auth: 'jwt' },
   handler: function(req, reply) {
-		var url = hapi_auth_github.login_url();
-    console.log(url);
-		var src = 'https://cloud.githubusercontent.com/assets/194400/11214293/4e309bf2-8d38-11e5-8d46-b347b2bd242e.png';
-		var btn = '<a href="' + url + '"><img src="' + src + '" alt="Login With GitHub"></a>';
-    reply(btn);
+    reply('boom');
   }
 }
 ]);
