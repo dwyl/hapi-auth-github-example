@@ -2,6 +2,10 @@ require('env2')('.env');
 var assert = require('assert');
 var Hapi   = require('hapi');
 var Wreck  = require('wreck');
+var wreck = Wreck.defaults({
+    headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 5.1; rv:19.0) Gecko/20100101 Firefox/19.0' }
+});
+var parse_links = require('./lib/github_link_parser.js');
 var server = new Hapi.Server();
 server.connection({
 	host: 'localhost',
@@ -11,7 +15,7 @@ server.connection({
 var opts = {
   REDIRECT_URL: '/githubauth',  // must match google app redirect URI
   handler: require('./lib/github_oauth_handler.js'), // your handler
-  SCOPE: 'user' // get user's profile see: developer.github.com/v3/oauth/#scopes
+  SCOPE: 'user, repo, read:org' // see: developer.github.com/v3/oauth/#scopes
 };
 
 var hapi_auth_github = require('hapi-auth-github');
@@ -50,9 +54,26 @@ server.route([{
 	config: { auth: 'jwt' },
   handler: function(req, reply) {
     console.log(' - - - - - - - - - - - - - - - - - - access_token:');
-    console.log(req.auth.credentials.tokens.access_token);
-    // wreck('https://api.github.com/')
-    reply('boom');
+    var access_token = req.auth.credentials.tokens.access_token
+    console.log(access_token);
+    var url = ' https://api.github.com/issues?page=2&access_token='+access_token;
+    console.log(' - - - - - - - - - - - - - - - - - - url:');
+    console.log(url)
+    // var options = {
+    //   headers: {
+    //     authorization: access_token,
+    //     'User-Agent': 'Tudo'
+    //   }
+    // };
+    // console.log(options);
+    wreck.get(url, function (err, res, payload) {
+      console.log(res.headers['link']);
+      // var links = parse_links(res.headers);
+      // console.log(links);
+      var issues = JSON.parse(payload.toString());
+      console.log(' - - - - - - - - - - >>> count: '+issues.length);
+      reply('<pre><code>' + payload.toString() + '</code></pre>' );
+    });
   }
 }
 ]);
