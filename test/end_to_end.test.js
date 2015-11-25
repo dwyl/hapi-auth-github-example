@@ -58,11 +58,11 @@ test(file+'MOCK GitHub OAuth2 Flow /githubauth?code=mockcode', function(t) {
   };
   server.inject(options, function(response) {
     t.equal(response.statusCode, 200, "Profile retrieved (Mock)");
-    var expected = 'Hello Alex, You Logged in Using GitHub!';
-    t.equal(response.payload, expected, "Got: " + expected + " (as expected)");
-    console.log(' - - - - - - - - - - - - - - - - - -');
+    var expected = 'Logged in Using GitHub';
+    t.ok(response.payload.indexOf(expected) > 1, "Got: " + expected + " (as expected)");
     COOKIE = response.headers['set-cookie'][0]; //.split('=')[1];
-    console.log();
+    console.log(' - - - - - - - - - - - - - - - - - - COOKIE:');
+    console.log(COOKIE);
     // console.log(' - - - - - - - - - - - - - - - - - - decoded:');
     // console.log(JWT.decode(COOKIE));
     server.stop(t.end);

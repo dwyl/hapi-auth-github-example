@@ -67,12 +67,16 @@ server.route([{
     // };
     // console.log(options);
     wreck.get(url, function (err, res, payload) {
-      console.log(res.headers['link']);
+      console.log(' - - - - - - - - - - - - - - - - - - PAYLOAD:');
+      console.log(payload);
+      console.log(' - - - - - - - - - - - - - - - - - - RESPONSE:');
+      console.log(res);
+      // console.log(res.headers['link']);
       // var links = parse_links(res.headers);
       // console.log(links);
-      var issues = JSON.parse(payload.toString());
-      console.log(' - - - - - - - - - - >>> count: '+issues.length);
-      reply('<pre><code>' + payload.toString() + '</code></pre>' );
+      // var issues = JSON.parse(payload);
+      // console.log(' - - - - - - - - - - >>> count: '+issues);
+      reply('<pre><code>' + payload + '</code></pre>' );
     });
   }
 }
