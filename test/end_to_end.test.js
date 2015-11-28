@@ -38,19 +38,17 @@ test(file+'MOCK GitHub OAuth2 Flow /githubauth?code=mockcode', function(t) {
   // google oauth2 token request url:
   var fs = require('fs');
   var token_fixture = fs.readFileSync('./test/fixtures/sample_access_token.json');
-  var nock = require('nock');
-  var scope = nock('https://github.com')
-            .persist() // https://github.com/pgte/nock#persist
-            .post('/login/oauth/access_token')
-            .reply(200, token_fixture);
+  nock('https://github.com')
+    .persist() // https://github.com/pgte/nock#persist
+    .post('/login/oauth/access_token')
+    .reply(200, token_fixture);
 
   // see: http://git.io/v4nTR for google plus api url
   // https://www.googleapis.com/plus/v1/people/{userId}
   var sample_profile = fs.readFileSync('./test/fixtures/sample_profile.json');
-  var nock = require('nock');
-  var scope = nock('https://api.github.com')
-            .get('/user')
-            .reply(200, sample_profile);
+  nock('https://api.github.com')
+    .get('/user')
+    .reply(200, sample_profile);
 
   var options = {
     method: "GET",

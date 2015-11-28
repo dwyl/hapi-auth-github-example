@@ -6,7 +6,9 @@ var wreck = Wreck.defaults({
     headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 5.1; rv:19.0) Gecko/20100101 Firefox/19.0' }
 });
 var parse_links = require('./lib/github_link_parser.js');
+
 var server = new Hapi.Server();
+
 server.connection({
 	host: 'localhost',
 	port: Number(process.env.PORT)
@@ -36,7 +38,8 @@ server.register(plugins, function (err) {
   });
 });
 
-server.route([{
+server.route([
+{
   method: 'GET',
   path: '/',
 	config: { auth: false },
@@ -54,18 +57,11 @@ server.route([{
 	config: { auth: 'jwt' },
   handler: function(req, reply) {
     console.log(' - - - - - - - - - - - - - - - - - - access_token:');
-    var access_token = req.auth.credentials.tokens.access_token
+    var access_token = req.auth.credentials.tokens.access_token;
     console.log(access_token);
     var url = ' https://api.github.com/issues?page=2&access_token='+access_token;
     console.log(' - - - - - - - - - - - - - - - - - - url:');
-    console.log(url)
-    // var options = {
-    //   headers: {
-    //     authorization: access_token,
-    //     'User-Agent': 'Tudo'
-    //   }
-    // };
-    // console.log(options);
+    console.log(url);
     wreck.get(url, function (err, res, payload) {
       console.log(' - - - - - - - - - - - - - - - - - - PAYLOAD:');
       console.log(payload);
