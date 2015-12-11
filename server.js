@@ -6,7 +6,6 @@ var Wreck  = require('wreck');
 var wreck = Wreck.defaults({
     headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 5.1; rv:19.0) Gecko/20100101 Firefox/19.0' }
 });
-var parse_links = require('./lib/github_link_parser.js');
 
 var server = new Hapi.Server();
 
