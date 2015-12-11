@@ -7,13 +7,15 @@ var redisClient = require('redis-connection')(); // instantiate redis-connection
 
 var server = require('../server.js');
 
-test(file+'Visit / root url expect to see a link', function(t) {
+test(file+'Visit / root url expect to see a login link', function(t) {
   var options = {
     method: "GET",
     url: "/"
   };
   server.inject(options, function(response) {
     t.equal(response.statusCode, 200, "Server is working.");
+    console.log(response.result);
+    t.ok(response.result.indexOf('Login With GitHub') > -1, 'Login with GitHub Link on Page')
     setTimeout(function(){ server.stop(t.end); }, 100);
   });
 });
