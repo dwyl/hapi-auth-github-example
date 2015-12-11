@@ -44,10 +44,8 @@ server.views({
   engines: {
     html: Handlebars
   },
-  relativeTo: __dirname + '/../views/',
-  path: '.',
+  path: __dirname + '/views/',
   layout: 'layout',
-  // layoutPath: 'layout',
   // helpersPath: 'helpers',
   // partialsPath: 'partials'
 });
