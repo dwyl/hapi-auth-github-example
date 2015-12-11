@@ -97,6 +97,24 @@ test(file+'Visit /issues with invalid JWT Cookie', function(t) {
     t.equal(response.statusCode, 401, "Auth Blocked by bad Cookie JWT");
     // setTimeout(function(){ server.stop(t.end); }, 100);
     server.stop(function(){
+      t.end()
+    });
+  });
+});
+
+test(file+'View /profile', function(t) {
+  var token = JWT.sign({ id: 321, "name": "Charlie" }, process.env.JWT_SECRET);
+  var options = {
+    method: "GET",
+    url: "/profile",
+    headers: { cookie: COOKIE }
+  };
+  server.inject(options, function(response) {
+    // console.log(' - - - - - - - - - - - - - - - - - - result:');
+    // console.log(response.result);
+    t.equal(response.statusCode, 200, "Profile");
+    // setTimeout(function(){ server.stop(t.end); }, 100);
+    server.stop(function(){
       redisClient.end();   // ensure redis con closed! - \\
       t.equal(redisClient.connected, false, "✓ Connection to Redis Closed");
       t.end()
