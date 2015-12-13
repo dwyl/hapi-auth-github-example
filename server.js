@@ -96,26 +96,23 @@ server.route([
   handler: function(req, reply) {
     console.log(' - - - - - - - - - - - - - - - - - - credentials:');
     console.log(req.auth.credentials)
-    var access_token = req.auth.credentials.tokens.access_token;
-    console.log(access_token);
-    var url = ' https://api.github.com/user?access_token='+access_token;
-    console.log(' - - - - - - - - - - - - - - - - - - url:');
-    console.log(url);
-
-    wreck.get(url, function (err, res, payload) {
-      console.log(' - - - - - - - - - - - - - - - - - - PAYLOAD:');
-      console.log(payload);
-      console.log(' - - - - - - - - - - - - - - - - - - RESPONSE:');
-      console.log(res);
-      // console.log(res.headers['link']);
-      // var links = parse_links(res.headers);
-      // console.log(links);
-      var issues = JSON.parse(payload);
-      console.log(' - - - - - - - - - - >>> count: '+issues);
-      reply('<pre><code>' + payload + '</code></pre>' );
-
-    });
-    // return reply.view('home', {});
+    // var access_token = req.auth.credentials.tokens.access_token;
+    // console.log(access_token);
+    // var url = ' https://api.github.com/user?access_token='+access_token;
+    // console.log(' - - - - - - - - - - - - - - - - - - url:');
+    // console.log(url);
+    //
+    // wreck.get(url, function (err, res, payload) {
+    //   console.log(' - - - - - - - - - - - - - - - - - - PAYLOAD:');
+    //   console.log(payload);
+    //   console.log(' - - - - - - - - - - - - - - - - - - RESPONSE:');
+    //   console.log(res);
+    //   var issues = JSON.parse(payload);
+    //   console.log(' - - - - - - - - - - >>> count: '+issues);
+    //   reply('<pre><code>' + payload + '</code></pre>' );
+    //
+    // });
+    return reply.view('profile', {});
   }
 }
 ]);
