@@ -2,6 +2,7 @@ var dir  = __dirname.split('/')[__dirname.split('/').length-1];
 var file = dir + __filename.replace(__dirname, '') + " > ";
 var test = require('tape');
 var nock = require('nock');
+var fs   = require('fs');
 var JWT  = require('jsonwebtoken');
 var redisClient = require('redis-connection')(); // instantiate redis-connection
 
@@ -38,7 +39,6 @@ var COOKIE; // we get this in the response in the next test:
 
 test(file+'MOCK GitHub OAuth2 Flow /githubauth?code=mockcode', function(t) {
   // google oauth2 token request url:
-  var fs = require('fs');
   var token_fixture = fs.readFileSync('./test/fixtures/sample_access_token.json');
   nock('https://github.com')
     .persist() // https://github.com/pgte/nock#persist
@@ -61,8 +61,8 @@ test(file+'MOCK GitHub OAuth2 Flow /githubauth?code=mockcode', function(t) {
     var expected = 'Logged in Using GitHub';
     t.ok(response.payload.indexOf(expected) > 1, "Got: " + expected + " (as expected)");
     COOKIE = response.headers['set-cookie'][0]; //.split('=')[1];
-    console.log(' - - - - - - - - - - - - - - - - - - COOKIE:');
-    console.log(COOKIE);
+    // console.log(' - - - - - - - - - - - - - - - - - - COOKIE:');
+    // console.log(COOKIE);
     // console.log(' - - - - - - - - - - - - - - - - - - decoded:');
     // console.log(JWT.decode(COOKIE));
     server.stop(t.end);
@@ -103,21 +103,42 @@ test(file+'Visit /issues with invalid JWT Cookie', function(t) {
 });
 
 test(file+'View /profile', function(t) {
-  var token = JWT.sign({ id: 321, "name": "Charlie" }, process.env.JWT_SECRET);
-  var options = {
-    method: "GET",
-    url: "/profile",
-    headers: { cookie: COOKIE }
-  };
-  server.inject(options, function(response) {
-    // console.log(' - - - - - - - - - - - - - - - - - - result:');
-    // console.log(response.result);
-    t.equal(response.statusCode, 200, "Profile");
-    // setTimeout(function(){ server.stop(t.end); }, 100);
-    server.stop(function(){
-      redisClient.end();   // ensure redis con closed! - \\
-      t.equal(redisClient.connected, false, "✓ Connection to Redis Closed");
-      t.end()
+  // console.log(' - - - - - - - - - - - - - - - - - - COOKIE:');
+  // console.log(COOKIE);
+
+  var decoded = JWT.decode(COOKIE.replace('token=',''));
+
+  // console.log(' - - - - - - - - - - - - - - - - - - DECODED:');
+  // console.log(decoded);
+
+  redisClient.get(decoded.id, function(rediserror, redisreply){
+    var profile = JSON.parse(redisreply);
+    var access_token = profile.tokens.access_token;
+    // console.log(' - - - - - - - REDIS reply - - - - - - - ');
+    // console.log( JSON.stringify(profile, null, 2) );
+
+    var sample_profile = fs.readFileSync('./test/fixtures/sample_profile.json');
+    nock('https://api.github.com')
+      .get('/user?access_token='+access_token)
+      .reply(200, sample_profile);
+
+    var options = {
+      method: "GET",
+      url: "/profile",
+      headers: { cookie: COOKIE }
+    };
+
+    server.inject(options, function(response) {
+      // console.log(' - - - - - - - - - - - - - - - - - - result:');
+      // console.log(response.result);
+      t.equal(response.statusCode, 200, "Profile");
+      // setTimeout(function(){ server.stop(t.end); }, 100);
+      server.stop(function(){
+        redisClient.end();   // ensure redis con closed! - \\
+        t.equal(redisClient.connected, false, "✓ Connection to Redis Closed");
+        t.end()
+      });
     });
-  });
+
+  }); // end redisClient.get
 });

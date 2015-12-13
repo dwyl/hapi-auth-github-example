@@ -94,8 +94,8 @@ server.route([
   path: '/profile',
 	config: { auth: 'jwt' },
   handler: function(req, reply) {
-    console.log(' - - - - - - - - - - - - - - - - - - credentials:');
-    console.log(req.auth.credentials)
+    // console.log(' - - - - - - - - - - - - - - - - - - credentials:');
+    // console.log(req.auth.credentials)
     var access_token = req.auth.credentials.tokens.access_token;
     console.log(access_token);
     var url = ' https://api.github.com/user?access_token='+access_token;
@@ -103,9 +103,9 @@ server.route([
     console.log(url);
 
     wreck.get(url, function (err, res, payload) {
-      console.log(' - - - - - - - - - - - - - - - - - - PAYLOAD:');
       payload = JSON.parse(payload.toString());
-      console.log(payload);
+      // console.log(' - - - - - - - - - - - - - - - - - - PAYLOAD:');
+      // console.log(payload);
       // reply('<pre><code>' + payload + '</code></pre>' );
       return reply.view('profile', payload);
     });
