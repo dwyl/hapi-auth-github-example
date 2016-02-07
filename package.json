@@ -1,6 +1,6 @@
 {
   "name": "hapi-auth-github-example",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An example of using hapi-auth-github (GitHub OAuth2 Hapi Plugin)",
   "main": "server.js",
   "scripts": {
@@ -30,19 +30,19 @@
   "homepage": "https://github.com/nelsonic/hapi-auth-github-example#readme",
   "devDependencies": {
     "env2": "^2.0.4",
-    "hapi": "^11.1.1",
-    "hapi-auth-jwt2": "^5.2.1",
-    "istanbul": "^0.4.0",
-    "jsonwebtoken": "^5.4.1",
-    "nock": "^3.0.0",
+    "hapi": "^13.0.0",
+    "hapi-auth-jwt2": "^5.4.1",
+    "istanbul": "^0.4.2",
+    "jsonwebtoken": "^5.5.4",
+    "nock": "^7.0.2",
     "nodemon": "^1.8.1",
     "pre-commit": "^1.1.1",
-    "tap-spec": "^4.1.0",
+    "tap-spec": "^4.1.1",
     "tape": "^4.2.2"
   },
   "dependencies": {
     "handlebars": "^4.0.5",
-    "hapi-auth-github": "^1.0.5",
+    "hapi-auth-github": "^1.0.6",
     "redis-connection": "^4.0.1",
     "vision": "^4.0.1",
     "wreck": "^7.0.0"
